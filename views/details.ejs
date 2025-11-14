@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - <%= type.charAt(0).toUpperCase() + type.slice(1) %> Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        .details-container { max-width: 400px; margin: auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        .details-container h2 { margin-bottom: 20px; }
+        .details-container p { margin: 10px 0; }
+        a { color: #007bff; text-decoration: none; margin-right: 10px; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="details-container">
+        <h2><%= type.charAt(0).toUpperCase() + type.slice(1) %> Details</h2>
+        <% if (item) { %>
+            <% if (type === 'book') { %>
+                <p><strong>Title:</strong> <%= item.title %></p>
+                <p><strong>ISBN:</strong> <%= item.isbn %></p>
+                <p><strong>Available:</strong> <%= item.available ? 'Yes' : 'No' %></p>
+            <% } else if (type === 'author') { %>
+                <p><strong>Name:</strong> <%= item.name %></p>
+                <p><strong>Biography:</strong> <%= item.biography %></p>
+            <% } else if (type === 'borrower') { %>
+                <p><strong>Name:</strong> <%= item.name %></p>
+                <p><strong>Email:</strong> <%= item.email %></p>
+            <% } %>
+            <a href="/edit/<%= type %>?_id=<%= item._id %>">Edit</a>
+            <a href="/home">Back to Home</a>
+        <% } else { %>
+            <p>No details available.</p>
+        <% } %>
+    </div>
+</body>
+</html>

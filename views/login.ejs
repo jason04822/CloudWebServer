@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('/images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white with 20% opacity */
+            backdrop-filter: blur(10px); /* Frosted glass blur effect */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            width: 300px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Optional: faint border */
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #000000; /* Changed to black */
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque background for readability */
+            color: #000000; /* Black text in inputs */
+        }
+        .login-container input::placeholder {
+            color: #333333; /* Darker placeholder text for contrast */
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: #ff4444; /* Red error text for visibility */
+            margin-top: 10px;
+        }
+        .login-container a {
+            color: #000000; /* Black link text */
+            text-decoration: none;
+        }
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+        /* Fallback for browsers without backdrop-filter support */
+        @supports not (backdrop-filter: blur(10px)) {
+            .login-container {
+                background-color: rgba(255, 255, 255, 0.5); /* Stronger fallback opacity */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <% if (messages && messages.error) { %>
+            <p class="error"><%= messages.error %></p>
+        <% } %>
+        <form method="POST" action="/login">
+            <input type="text" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+    </div>
+</body>
+</html>

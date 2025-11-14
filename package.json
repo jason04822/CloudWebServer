@@ -1,0 +1,22 @@
+{
+  "name": "381group19",
+  "version": "1.0.0",
+  "description": "A Library Management System with user authentication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongodb-session": "^3.1.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-flash": "^0.0.2",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.18.0",
+    "mongodb": "^6.9.0",
+    "passport": "^0.7.0"
+  }
+}

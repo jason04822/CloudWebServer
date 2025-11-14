@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Borrowed Records</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <!-- Animated background shapes from template -->
+    <div class="bg-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+        <div class="shape shape4"></div>
+        <div class="shape shape5"></div>
+        <div class="shape shape6"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    Library Management System
+                </div>
+                <div class="nav-links">
+                    <a onclick="showPage('home')">Home</a>
+                    <a class="active" onclick="showPage('borrowed')">Borrowed Records</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="borrowed" class="page active">
+        <div class="container">
+            <h1>Borrowed Records</h1>
+            <% if (messages && messages.error) { %>
+                <p class="error"><%= messages.error %></p>
+            <% } %>
+            <% if (messages && messages.success) { %>
+                <p class="success"><%= messages.success %></p>
+            <% } %>
+
+            <div class="section glass">
+                <h2>Borrowed Books</h2>
+                <% if (borrowedData.books && borrowedData.books.length > 0) { %>
+                    <table>
+                        <tr>
+                            <th>Title</th>
+                            <th>ISBN</th>
+                            <th>Borrow Date</th>
+                        </tr>
+                        <% borrowedData.books.forEach(book => { %>
+                            <tr>
+                                <td><%= book.title %></td>
+                                <td><%= book.isbn %></td>
+                                <td><%= book.borrowDate %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% } else { %>
+                    <p>No borrowed books found.</p>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer">
+        <div class="container">
+            <div class="footer-content glass">
+                <div class="footer-links">
+                    <a href="#">About Us</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Sitemap</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="copyright">
+                    Copyright © 2025 Library Management System. Design: <a href="https://templatemo.com">TemplateMo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/main.js"></script>
+</body>
+</html>
