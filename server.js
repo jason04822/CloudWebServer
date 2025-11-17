@@ -14,7 +14,6 @@ const mongourl =
 
 const dbname = "381GP";
 
-
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -22,7 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(flash());
-
 
 const store = new MongoDBStore({
   uri: mongourl,
@@ -39,7 +37,6 @@ app.use(
     cookie: { maxAge: 86400000 },
   })
 );
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -88,12 +85,10 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-
 async function dbConnect() {
   const client = await MongoClient.connect(mongourl);
   return client.db(dbname); 
 }
-
 
 async function borrowBook(bookId, borrowerEmail) {
   const db = await dbConnect();
@@ -160,6 +155,7 @@ async function returnBook(bookId) {
   }
 }
 
+
 app.get("/", (req, res) => res.redirect("/login"));
 
 app.get("/login", (req, res) => {
@@ -213,6 +209,28 @@ app.get("/home", async (req, res) => {
     borrowers,
     messages: req.flash(),
   });
+});
+
+app.post("/books/add", async (req, res) => {
+  try {
+    const { title, isbn } = req.body;
+    if (!title || !isbn) {
+      req.flash("error", "Title and ISBN are required");
+      return res.redirect("/home");
+    }
+
+    const db = await dbConnect();
+    await db.collection("books").insertOne({
+      title,
+      isbn,
+      available: true,
+    });
+
+    res.redirect("/home");
+  } catch (err) {
+    console.error("POST /books/add error:", err);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/books/edit/:id", async (req, res) => {
@@ -319,7 +337,7 @@ app.get("/users", async (req, res) => {
     const users = await db
       .collection("users")
       .find({})
-      .project({ password: 0 }) 
+      .project({ password: 0 })
       .toArray();
 
     res.json(users);
@@ -335,7 +353,9 @@ app.post("/users", async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-      return res.status(400).json({ error: "username, email, password are required" });
+      return res
+        .status(400)
+        .json({ error: "username, email, password are required" });
     }
 
     const existing = await db.collection("users").findOne({ email });
