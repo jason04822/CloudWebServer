@@ -1,16 +1,12 @@
-// Updated public/scripts/main.js based on templatemo-glossy-touch.js
 let currentPage = 'home';
 
 function showPage(pageId) {
-    // Hide all pages
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
     
-    // Show selected page
     document.getElementById(pageId).classList.add('active');
     
-    // Update navigation
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', (e) => {
             if (link.getAttribute('href')) window.location.href = link.getAttribute('href');
@@ -19,22 +15,18 @@ function showPage(pageId) {
  
     currentPage = pageId;
     
-    // Move footer to the active page
     const footer = document.getElementById('footer');
     const activePage = document.getElementById(pageId);
     activePage.appendChild(footer);
     
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Initialize footer position
 window.addEventListener('DOMContentLoaded', () => {
     const homePage = document.getElementById('home');
     homePage.appendChild(footer);
 });
 
-// Add interactive parallax effect to background shapes
 document.addEventListener('mousemove', (e) => {
     const shapes = document.querySelectorAll('.shape');
     const x = e.clientX / window.innerWidth;
@@ -48,7 +40,6 @@ document.addEventListener('mousemove', (e) => {
     });
 });
 
-// Add scroll-based animations
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const parallax = document.querySelector('.bg-shapes');
@@ -56,7 +47,6 @@ window.addEventListener('scroll', () => {
     parallax.style.transform = `translateY(${speed}px)`;
 });
 
-// Add click ripple effect to glass elements
 document.querySelectorAll('.glass').forEach(element => {
     element.addEventListener('click', function(e) {
         const ripple = document.createElement('div');
@@ -88,7 +78,6 @@ document.querySelectorAll('.glass').forEach(element => {
     });
 });
 
-// Add ripple animation keyframes
 const style = document.createElement('style');
 style.textContent = `
     @keyframes ripple {
