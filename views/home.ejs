@@ -20,6 +20,14 @@
         <div class="section glass">
             <h2 class="books-title">Books</h2>
 
+            <div class="add-book-bar">
+                <form method="POST" action="/books/add" class="add-book-form">
+                    <input type="text" name="title" placeholder="Book title" required>
+                    <input type="text" name="isbn" placeholder="ISBN" required>
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+
             <table>
                 <tr>
                     <th>Title</th>
@@ -44,7 +52,6 @@
 
                     <td>
                         <% if (book.available) { %>
-                            <!-- Books section：只保留 Borrow button -->
                             <form method="POST" action="/borrow/book" style="display:inline;">
                                 <input type="hidden" name="bookId" value="<%= book._id %>">
                                 <input type="hidden" name="borrowerEmail" value="<%= user.email %>">
@@ -80,7 +87,6 @@
                                     <li>
                                         <%= bb.bookTitle %>
                                         (on <%= new Date(bb.borrowDate).toDateString() %>)
-                                        <!-- Edit & Delete 放喺 Borrowed Books 隔離 -->
                                         <a href="/books/edit/<%= bb.bookId %>">Edit</a>
 
                                         <form method="POST"
