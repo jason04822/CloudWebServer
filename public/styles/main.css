@@ -9,21 +9,78 @@
 
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(
-        135deg,
-        #0c0c0c 0%,
-        #1a1a2e 15%,
-        #16213e 35%,
-        #0f3460 50%,
-        #533a7d 70%,
-        #8b5a8c 85%,
-        #a0616a 100%
-    );
+    background: url("/images/cloud_bg.jpg") no-repeat center center fixed;
+    background-size: cover;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* Animated background elements */
+/* ============================
+   Page layout helpers
+   ============================ */
+
+/* 外層最大寬度 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Welcome title spacing */
+h1 {
+    color: #ffffff;
+    font-size: 2rem;
+    margin-top: 10px;
+    margin-bottom: 8px;   /* h1 自己細少少，交俾 .top-bar 控制整體距離 */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* 🔹 Section 標題顏色 */
+.books-title {
+    color: #ffffff;           /* 淺藍色 for Books */
+    letter-spacing: 1px;
+}
+
+.borrowers-title {
+    color: #ffffff;           /* 淺黃色 for Borrowers */
+    letter-spacing: 1px;
+}
+
+/* Welcome + Logout 同一行 */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;   /* Welcome row 同 Books 卡之間嘅距離 */
+}
+
+/* Logout 膠囊 button */
+.logout-btn {
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s ease;
+}
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Books / Borrowers card spacing */
+.section {
+    margin-bottom: 20px;   /* Books 同 Borrowers 之間距離 */
+    padding: 24px 28px;    /* 卡入面 content 同邊緣嘅距離 */
+}
+
+/* ============================
+   Animated background elements
+   ============================ */
+
 .bg-shapes {
     position: fixed;
     top: 0;
@@ -98,7 +155,10 @@ body {
     50% { transform: translateY(-20px) rotate(calc(var(--start-rotation, 0deg) + 180deg)); }
 }
 
-/* Glass container styles */
+/* ============================
+   Glass container styles
+   ============================ */
+
 .glass {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
@@ -115,16 +175,10 @@ body {
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
 }
 
-/* Header styles */
-header {
-    padding: 20px;
-}
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
+/* ============================
+   (舊 nav 樣式，雖然而家冇用到，但 keep 住都無妨)
+   ============================ */
 
-/* Navigation */
 .logo {
     display: flex;
     align-items: center;
@@ -162,7 +216,10 @@ header {
     transform: translateY(-2px);
 }
 
-/* Table styles (adapted for LMS) */
+/* ============================
+   Table styles (adapted for LMS)
+   ============================ */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -174,7 +231,7 @@ th, td {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 th {
-    color: #93c5fd;
+    color: #ffffff;
     text-transform: uppercase;
     font-size: 0.9rem;
     letter-spacing: 1px;
@@ -183,7 +240,7 @@ td {
     color: rgba(255, 255, 255, 0.9);
 }
 
-/* Actions links as buttons */
+/* Actions links as buttons (如果之後想用) */
 .actions a {
     padding: 6px 12px;
     margin-right: 10px;
@@ -202,7 +259,10 @@ td {
     display: inline-block;
 }
 
-/* Footer styles */
+/* ============================
+   Footer styles（而家未必用到）
+   ============================ */
+
 #footer {
     margin-top: 60px;
     padding: 30px 0;
@@ -241,7 +301,10 @@ td {
     text-decoration: none;
 }
 
-/* Responsive design */
+/* ============================
+   Responsive design
+   ============================ */
+
 @media (max-width: 768px) {
     .container {
         padding: 0 15px;

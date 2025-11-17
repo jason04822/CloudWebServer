@@ -1,140 +1,130 @@
-<!-- Updated views/home.ejs with Glassmorphism template style -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Management System - Home</title>
-    <link rel="stylesheet" href="/style/main.css"> <!-- Reference to new CSS -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="/styles/main.css" />
 </head>
+
 <body>
-    <!-- Animated background shapes from template -->
-    <div class="bg-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
-        <div class="shape shape4"></div>
-        <div class="shape shape5"></div>
-        <div class="shape shape6"></div>
-    </div>
 
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <div class="logo-icon"></div>
-                    Library Management System
-                </div>
-                <div class="nav-links">
-                    <a class="active" onclick="showPage('home')">Home</a>
-                    <a onclick="showPage('borrowed')">Borrowed Records</a>
-                    <a href="/logout">Logout</a>
-                </div>
-            </nav>
-        </div>
-    </header>
+<main id="home" class="page active">
+    <div class="container">
 
-    <main id="home" class="page active">
-        <div class="container">
+        <!-- Welcome + Logout 同一行 -->
+        <div class="top-bar">
             <h1>Welcome, <%= user.username %></h1>
-            <% if (messages && messages.error) { %>
-                <p class="error"><%= messages.error %></p>
-            <% } %>
-            <div class="section glass">
-                <h2>Books</h2>
-                <div class="actions admin-only">
-                    <a href="/create/book">Add New Book</a>
-                </div>
-                <table>
-                    <tr><th>Title</th>
-                        <th>ISBN</th>
-                        <th>Available</th>
-                        <th>Actions</th>
-                    </tr>
-                    <% books.forEach(book => { %>
-                        <tr>
-                            <td><%= book.title %></td>
-                            <td><%= book.isbn %></td>
-                            <td><%= book.available ? 'Yes' : 'No' %></td>
-                            <td>
-                                <a href="/details/book?_id=<%= book._id %>">Details</a>
-                                <span class="admin-only">
-                                    <a href="/edit/book?_id=<%= book._id %>">Edit</a>
-                                    <a href="/delete/book?_id=<%= book._id %>" onclick="return confirm('Are you sure?');">Delete</a>
-                                </span>
-                            </td>
-                        </tr>
-                    <% }); %>
-                </table>
-            </div>
-            <div class="section glass">
-                <h2>Authors</h2>
-                <div class="actions admin-only">
-                    <a href="/create/author">Add New Author</a>
-                </div>
-                <table>
-                    <tr><th>Name</th><th>Biography</th><th>Actions</th></tr>
-                    <% authors.forEach(author => { %>
-                        <tr>
-                            <td><%= author.name %></td>
-                            <td><%= author.biography %></td>
-                            <td>
-                                <a href="/details/author?_id=<%= author._id %>">Details</a>
-                                <span class="admin-only">
-                                    <a href="/edit/author?_id=<%= author._id %>">Edit</a>
-                                    <a href="/delete/author?_id=<%= author._id %>" onclick="return confirm('Are you sure?');">Delete</a>
-                                </span>
-                            </td>
-                        </tr>
-                    <% }); %>
-                </table>
-            </div>
-            <div class="section glass">
-                <h2>Borrowers</h2>
-                <div class="actions admin-only">
-                    <a href="/create/borrower">Add New Borrower</a>
-                </div>
-                <table>
-                    <tr><th>Name</th><th>Email</th><th>Actions</th></tr>
-                    <% borrowers.forEach(borrower => { %>
-                        <tr>
-                            <td><%= borrower.name %></td>
-                            <td><%= borrower.email %></td>
-                            <td>
-                                <a href="/details/borrower?_id=<%= borrower._id %>">Details</a>
-                                <span class="admin-only">
-                                    <a href="/edit/borrower?_id=<%= borrower._id %>">Edit</a>
-                                    <a href="/delete/borrower?_id=<%= borrower._id %>" onclick="return confirm('Are you sure?');">Delete</a>
-                                </span>
-                            </td>
-                        </tr>
-                    <% }); %>
-                </table>
-            </div>
-            <div class="section glass">
-                <h2>Borrowed Records</h2>
-                <a href="/borrowed">View Borrowed</a>
-            </div>
+            <a href="/logout" class="logout-btn">Logout</a>
         </div>
-    </main>
 
-    <div id="footer">
-        <div class="container">
-            <div class="footer-content glass">
-                <div class="footer-links">
-                    <a href="#">About Us</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Sitemap</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="copyright">
-                    Copyright © 2025 Library Management System. Design: <a href="https://templatemo.com">TemplateMo</a>
-                </div>
-            </div>
+        <!-- BOOKS SECTION -->
+        <div class="section glass">
+            <h2 class="books-title">Books</h2>
+
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>ISBN</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                <% books.forEach(book => { %>
+                <tr>
+                    <td><%= book.title %></td>
+                    <td><%= book.isbn %></td>
+
+                    <td>
+                        <% if (book.available) { %>
+                            Available
+                        <% } else { %>
+                            Borrowed <br>
+                            <small>by <%= book.borrowedBy %></small>
+                        <% } %>
+                    </td>
+
+                    <td>
+                        <% if (book.available) { %>
+                            <!-- Books section：只保留 Borrow button -->
+                            <form method="POST" action="/borrow/book" style="display:inline;">
+                                <input type="hidden" name="bookId" value="<%= book._id %>">
+                                <input type="hidden" name="borrowerEmail" value="<%= user.email %>">
+                                <button type="submit">Borrow</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+                <% }); %>
+            </table>
         </div>
+
+        <!-- BORROWERS SECTION -->
+        <div class="section glass">
+            <h2 class="borrowers-title">Borrowers</h2>
+
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Borrowed Books</th>
+                    <th>Add Borrow</th>
+                </tr>
+
+                <% borrowers.forEach(b => { %>
+                <tr>
+                    <td><%= b.name %></td>
+                    <td><%= b.email %></td>
+
+                    <td>
+                        <% if (b.borrowedBooks && b.borrowedBooks.length > 0) { %>
+                            <ul>
+                                <% b.borrowedBooks.forEach(bb => { %>
+                                    <li>
+                                        <%= bb.bookTitle %>
+                                        (on <%= new Date(bb.borrowDate).toDateString() %>)
+                                        <!-- Edit & Delete 放喺 Borrowed Books 隔離 -->
+                                        <a href="/books/edit/<%= bb.bookId %>">Edit</a>
+
+                                        <form method="POST"
+                                              action="/books/delete"
+                                              style="display:inline;"
+                                              onsubmit="return confirm('Delete this book?');">
+                                            <input type="hidden" name="bookId" value="<%= bb.bookId %>">
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } else { %>
+                            None
+                        <% } %>
+                    </td>
+
+                    <td>
+                        <form method="POST" action="/borrow/fromBorrowers">
+                            <input type="hidden" name="borrowerEmail" value="<%= b.email %>">
+
+                            <select name="bookId" required>
+                                <option value="">Select book…</option>
+                                <% books.forEach(book => { %>
+                                    <% if (book.available) { %>
+                                        <option value="<%= book._id %>"><%= book.title %></option>
+                                    <% } %>
+                                <% }); %>
+                            </select>
+
+                            <button type="submit">Add</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+
+            </table>
+        </div>
+
     </div>
+</main>
 
-    <script src="/scripts/main.js"></script> <!-- Reference to new JS -->
 </body>
 </html>

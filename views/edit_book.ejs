@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book Status</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
+        .box {
+            max-width: 420px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 { margin-top: 0; }
+        label { display:block; margin-top: 12px; margin-bottom:4px; font-weight:bold; }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #3498db;
+            color: #fff;
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+        }
+        button:hover { background:#2980b9; }
+        a { color:#3498db; text-decoration:none; margin-left:10px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Edit Book Status</h2>
+
+    <p><strong>Title:</strong> <%= book.title %></p>
+    <p><strong>ISBN:</strong> <%= book.isbn %></p>
+
+    <form method="POST" action="/books/edit/<%= book._id %>">
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            <option value="available" <%= book.available ? "selected" : "" %>>Available</option>
+            <option value="borrowed" <%= !book.available ? "selected" : "" %>>Borrowed</option>
+        </select>
+
+        <label for="borrowerEmail">Borrower Email (if Borrowed)</label>
+        <input
+            type="email"
+            id="borrowerEmail"
+            name="borrowerEmail"
+            value="<%= book.borrowedBy || "" %>"
+            placeholder="e.g. user@example.com"
+        >
+
+        <button type="submit">Save</button>
+        <a href="/home">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

@@ -12,25 +12,25 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-image: url('/images/bg.jpg');
+            background-image: url('/images/toy_story-wallpaper-1600x900.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
         .login-container {
-            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white with 20% opacity */
-            backdrop-filter: blur(10px); /* Frosted glass blur effect */
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            background-color: rgba(255, 255, 255, 0.008);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            box-shadow: 0 6px 6px rgba(0, 0, 0, 0.5);
             width: 300px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Optional: faint border */
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .login-container h2 {
             margin-bottom: 20px;
-            color: #000000; /* Changed to black */
+            color: #faf6f6;
         }
         .login-container input {
             width: 100%;
@@ -39,30 +39,36 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque background for readability */
-            color: #000000; /* Black text in inputs */
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #848282;
         }
         .login-container input::placeholder {
-            color: #333333; /* Darker placeholder text for contrast */
+            color: #848282;
         }
         .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
+            width: 30%;
+            padding: 8px 16px;           /* 上下多啲 padding 會更圓潤 */
+            margin-top: 10px;
+            background: #85dafe;
+            color:#ffffff;
             border: none;
-            border-radius: 4px;
+            border-radius: 60px;         /* 越大越圓，60px 已經好膠囊 */
+            font-weight: bold;
+            font-size: 0.9rem;
+        
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         .login-container button:hover {
-            background-color: #0056b3;
+            background-color: #40c8f5;
+            color:#ffffff
         }
         .error {
-            color: #ff4444; /* Red error text for visibility */
+            color: #ff4444;
             margin-top: 10px;
         }
         .login-container a {
-            color: #000000; /* Black link text */
+            color: #848282; 
             text-decoration: none;
         }
         .login-container a:hover {
@@ -71,14 +77,14 @@
         /* Fallback for browsers without backdrop-filter support */
         @supports not (backdrop-filter: blur(10px)) {
             .login-container {
-                background-color: rgba(255, 255, 255, 0.5); /* Stronger fallback opacity */
+                background-color: rgba(255, 255, 255, 0.5); 
             }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Welcome Back</h2>
         <% if (messages && messages.error) { %>
             <p class="error"><%= messages.error %></p>
         <% } %>
@@ -87,7 +93,10 @@
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        <p style="margin-top:18px; color: #575555; font-size: 0.95rem;">
+            Don't have an account? 
+            <a href="/signup" style="color: #575555; text-decoration: underline;">Sign up</a>
+        </p>
     </div>
 </body>
 </html>
