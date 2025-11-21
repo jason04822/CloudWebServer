@@ -5,8 +5,8 @@
 - *Group Info*:
   - Group No.: 19
   - Students' Names and SIDs:
-    - Student 1: [Ho Ch], SID: [13136451]
-    - Student 2: [Au Pak Yu], SID: [13137320]
+    - Student 1: [Ho Chun Long], SID: [13137320]
+    - Student 2: [Au Pak Yu], SID: [13136451]
     - Student 3: [Yuen Ching Hin], SID: [13133100]
 
 ## 2. Project File Intro
