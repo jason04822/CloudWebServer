@@ -155,7 +155,6 @@ async function returnBook(bookId) {
   }
 }
 
-
 app.get("/", (req, res) => res.redirect("/login"));
 
 app.get("/login", (req, res) => {
@@ -233,6 +232,7 @@ app.post("/books/add", async (req, res) => {
   }
 });
 
+// ---- Edit Book (GET form) ----
 app.get("/books/edit/:id", async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect("/login");
 
@@ -277,22 +277,10 @@ app.post("/books/delete", async (req, res) => {
   const { bookId } = req.body;
 
   try {
-    const db = await dbConnect();
-
-    await db.collection("borrowers").updateMany(
-      {},
-      {
-        $pull: {
-          borrowedBooks: { bookId: bookId },
-        },
-      }
-    );
-
-    await db.collection("books").deleteOne({ _id: new ObjectId(bookId) });
-
+    await returnBook(bookId);
     res.redirect("/home");
   } catch (err) {
-    console.error("Delete book ERROR:", err);
+    console.error("Delete/Return book ERROR:", err);
     res.status(500).send("Server error");
   }
 });
