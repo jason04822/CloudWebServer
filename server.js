@@ -1,3 +1,7 @@
+// ======================================
+// server.js — FINAL for Cloud + Local (admin + REST API)
+// ======================================
+
 const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
@@ -9,10 +13,20 @@ const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
 
+// ============================
+// MONGO CONFIG
+// ============================
+
+// ✅ 雲端用 process.env.MONGO_URL，本地冇 set 就用 fallback
 const mongourl =
+  process.env.MONGO_URL ||
   "mongodb+srv://s1313645_db_user:12345@cluster0.ju6nn4y.mongodb.net/381GP?retryWrites=true&w=majority";
 
 const dbname = "381GP";
+
+// ============================
+// MIDDLEWARE
+// ============================
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -21,6 +35,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(flash());
+
+// ============================
+// SESSION STORE
+// ============================
 
 const store = new MongoDBStore({
   uri: mongourl,
@@ -37,6 +55,10 @@ app.use(
     cookie: { maxAge: 86400000 },
   })
 );
+
+// ============================
+// PASSPORT
+// ============================
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -85,10 +107,18 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// ============================
+// DB CONNECT HELPER
+// ============================
+
 async function dbConnect() {
   const client = await MongoClient.connect(mongourl);
-  return client.db(dbname); 
+  return client.db(dbname); // 連住 381GP
 }
+
+// ============================
+// ROLE HELPER
+// ============================
 
 function isAdminUser(user) {
   return user && user.email === "123@test.com";
@@ -101,6 +131,11 @@ function ensureAdmin(req, res, next) {
   next();
 }
 
+// ============================
+// BORROW / RETURN LOGIC
+// ============================
+
+// 借書：更新 books + borrowers
 async function borrowBook(bookId, borrowerEmail) {
   const db = await dbConnect();
 
@@ -110,6 +145,7 @@ async function borrowBook(bookId, borrowerEmail) {
 
   if (!book) throw new Error("Book not found");
 
+  // 更新書本
   await db.collection("books").updateOne(
     { _id: new ObjectId(bookId) },
     {
@@ -136,6 +172,7 @@ async function borrowBook(bookId, borrowerEmail) {
   );
 }
 
+// 還書：將書變 Available，並喺 borrower 裏面移除
 async function returnBook(bookId) {
   const db = await dbConnect();
 
@@ -147,6 +184,7 @@ async function returnBook(bookId) {
 
   const borrowerEmail = book.borrowedBy;
 
+  // 書設為 available
   await db.collection("books").updateOne(
     { _id: new ObjectId(bookId) },
     {
@@ -155,6 +193,7 @@ async function returnBook(bookId) {
     }
   );
 
+  // 喺 borrower 裏面移走呢本書
   if (borrowerEmail) {
     await db.collection("borrowers").updateOne(
       { email: borrowerEmail },
@@ -167,9 +206,13 @@ async function returnBook(bookId) {
   }
 }
 
+// ============================
+// ROUTES — WEB PAGES
+// ============================
 
 app.get("/", (req, res) => res.redirect("/login"));
 
+// ---- Login ----
 app.get("/login", (req, res) => {
   res.render("login", { messages: req.flash() });
 });
@@ -183,6 +226,7 @@ app.post(
   })
 );
 
+// ---- Signup ----
 app.get("/signup", (req, res) => {
   res.render("signup", { messages: req.flash() });
 });
@@ -208,6 +252,7 @@ app.post("/signup", async (req, res) => {
   res.redirect("/login");
 });
 
+// ---- Home ----
 app.get("/home", async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect("/login");
 
@@ -225,6 +270,7 @@ app.get("/home", async (req, res) => {
   });
 });
 
+// ---- Add Book (admin only) ----
 app.post("/books/add", ensureAdmin, async (req, res) => {
   try {
     const { title, isbn } = req.body;
@@ -247,6 +293,7 @@ app.post("/books/add", ensureAdmin, async (req, res) => {
   }
 });
 
+// ---- Edit Book (GET form, admin only) ----
 app.get("/books/edit/:id", ensureAdmin, async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect("/login");
 
@@ -263,6 +310,7 @@ app.get("/books/edit/:id", ensureAdmin, async (req, res) => {
   });
 });
 
+// ---- Edit Book (POST update status, admin only) ----
 app.post("/books/edit/:id", ensureAdmin, async (req, res) => {
   const bookId = req.params.id;
   const { status, borrowerEmail } = req.body;
@@ -272,7 +320,10 @@ app.post("/books/edit/:id", ensureAdmin, async (req, res) => {
       await returnBook(bookId);
     } else if (status === "borrowed") {
       if (!borrowerEmail) {
-        req.flash("error", "Borrower email is required when status is Borrowed");
+        req.flash(
+          "error",
+          "Borrower email is required when status is Borrowed"
+        );
         return res.redirect("/books/edit/" + bookId);
       }
 
@@ -287,6 +338,7 @@ app.post("/books/edit/:id", ensureAdmin, async (req, res) => {
   }
 });
 
+// ---- Delete Borrow Record (Return Book, admin only) ----
 app.post("/books/delete", ensureAdmin, async (req, res) => {
   const { bookId } = req.body;
 
@@ -299,6 +351,7 @@ app.post("/books/delete", ensureAdmin, async (req, res) => {
   }
 });
 
+// ---- Borrow from Books section (ALL users) ----
 app.post("/borrow/book", async (req, res) => {
   const { bookId, borrowerEmail } = req.body;
 
@@ -311,6 +364,7 @@ app.post("/borrow/book", async (req, res) => {
   }
 });
 
+// ---- Borrow from Borrowers section (admin only) ----
 app.post("/borrow/fromBorrowers", ensureAdmin, async (req, res) => {
   const { bookId, borrowerEmail } = req.body;
 
@@ -327,12 +381,18 @@ app.post("/borrow/fromBorrowers", ensureAdmin, async (req, res) => {
   }
 });
 
+// ---- Logout ----
 app.get("/logout", (req, res) => {
   req.logout(() => {
     res.redirect("/login");
   });
 });
 
+// ============================
+// REST API — /users CRUD (for curl)
+// ============================
+
+// GET /users
 app.get("/users", async (req, res) => {
   try {
     const db = await dbConnect();
@@ -342,13 +402,14 @@ app.get("/users", async (req, res) => {
       .project({ password: 0 })
       .toArray();
 
-  res.json(users);
+    res.json(users);
   } catch (err) {
     console.error("GET /users error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
+// POST /users
 app.post("/users", async (req, res) => {
   try {
     const db = await dbConnect();
@@ -385,6 +446,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
+// PUT /users/:id
 app.put("/users/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -432,6 +494,7 @@ app.put("/users/:id", async (req, res) => {
   }
 });
 
+// DELETE /users/:id
 app.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -456,6 +519,12 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server running at http://localhost:3000");
+// ============================
+// START SERVER
+// ============================
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
