@@ -12,21 +12,26 @@
 <main id="home" class="page active">
     <div class="container">
 
+        <!-- Welcome + Logout 同一行 -->
         <div class="top-bar">
             <h1>Welcome, <%= user.username %></h1>
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
 
+        <!-- BOOKS SECTION -->
         <div class="section glass">
             <h2 class="books-title">Books</h2>
 
-            <div class="add-book-bar">
-                <form method="POST" action="/books/add" class="add-book-form">
-                    <input type="text" name="title" placeholder="Book title" required>
-                    <input type="text" name="isbn" placeholder="ISBN" required>
-                    <button type="submit">Add</button>
-                </form>
-            </div>
+            <!-- 只有 admin 先見到 Add Book -->
+            <% if (isAdmin) { %>
+                <div class="add-book-bar">
+                    <form method="POST" action="/books/add" class="add-book-form">
+                        <input type="text" name="title" placeholder="Book title" required>
+                        <input type="text" name="isbn" placeholder="ISBN" required>
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+            <% } %>
 
             <table>
                 <tr>
@@ -42,16 +47,25 @@
                     <td><%= book.isbn %></td>
 
                     <td>
-                        <% if (book.available) { %>
-                            Available
+                        <% if (isAdmin) { %>
+                            <% if (book.available) { %>
+                                Available
+                            <% } else { %>
+                                Borrowed <br>
+                                <small>by <%= book.borrowedBy %></small>
+                            <% } %>
                         <% } else { %>
-                            Borrowed <br>
-                            <small>by <%= book.borrowedBy %></small>
+                            <% if (book.available) { %>
+                                Available
+                            <% } else { %>
+                                Borrowed
+                            <% } %>
                         <% } %>
                     </td>
 
                     <td>
                         <% if (book.available) { %>
+                            <!-- 所有人都可以喺 Books 度借自己 -->
                             <form method="POST" action="/borrow/book" style="display:inline;">
                                 <input type="hidden" name="bookId" value="<%= book._id %>">
                                 <input type="hidden" name="borrowerEmail" value="<%= user.email %>">
@@ -64,6 +78,8 @@
             </table>
         </div>
 
+        <!-- BORROWERS SECTION（只 admin 先見到） -->
+        <% if (isAdmin) { %>
         <div class="section glass">
             <h2 class="borrowers-title">Borrowers</h2>
 
@@ -87,12 +103,13 @@
                                     <li>
                                         <%= bb.bookTitle %>
                                         (on <%= new Date(bb.borrowDate).toDateString() %>)
+                                        <!-- Edit & Delete 放喺 Borrowed Books 隔離（admin 專用） -->
                                         <a href="/books/edit/<%= bb.bookId %>">Edit</a>
 
                                         <form method="POST"
                                               action="/books/delete"
                                               style="display:inline;"
-                                              onsubmit="return confirm('Delete this book?');">
+                                              onsubmit="return confirm('Return this book?');">
                                             <input type="hidden" name="bookId" value="<%= bb.bookId %>">
                                             <button type="submit">Delete</button>
                                         </form>
@@ -125,6 +142,7 @@
 
             </table>
         </div>
+        <% } %>
 
     </div>
 </main>
