@@ -90,6 +90,17 @@ async function dbConnect() {
   return client.db(dbname); 
 }
 
+function isAdminUser(user) {
+  return user && user.email === "123@test.com";
+}
+
+function ensureAdmin(req, res, next) {
+  if (!req.isAuthenticated() || !isAdminUser(req.user)) {
+    return res.status(403).send("Forbidden");
+  }
+  next();
+}
+
 async function borrowBook(bookId, borrowerEmail) {
   const db = await dbConnect();
 
@@ -109,6 +120,7 @@ async function borrowBook(bookId, borrowerEmail) {
     }
   );
 
+  // 更新 borrower
   await db.collection("borrowers").updateOne(
     { email: borrowerEmail },
     {
@@ -154,6 +166,7 @@ async function returnBook(bookId) {
     );
   }
 }
+
 
 app.get("/", (req, res) => res.redirect("/login"));
 
@@ -201,16 +214,18 @@ app.get("/home", async (req, res) => {
   const db = await dbConnect();
   const books = await db.collection("books").find({}).toArray();
   const borrowers = await db.collection("borrowers").find({}).toArray();
+  const isAdmin = isAdminUser(req.user);
 
   res.render("home", {
     user: req.user,
+    isAdmin,
     books,
     borrowers,
     messages: req.flash(),
   });
 });
 
-app.post("/books/add", async (req, res) => {
+app.post("/books/add", ensureAdmin, async (req, res) => {
   try {
     const { title, isbn } = req.body;
     if (!title || !isbn) {
@@ -232,8 +247,7 @@ app.post("/books/add", async (req, res) => {
   }
 });
 
-// ---- Edit Book (GET form) ----
-app.get("/books/edit/:id", async (req, res) => {
+app.get("/books/edit/:id", ensureAdmin, async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect("/login");
 
   const db = await dbConnect();
@@ -249,7 +263,7 @@ app.get("/books/edit/:id", async (req, res) => {
   });
 });
 
-app.post("/books/edit/:id", async (req, res) => {
+app.post("/books/edit/:id", ensureAdmin, async (req, res) => {
   const bookId = req.params.id;
   const { status, borrowerEmail } = req.body;
 
@@ -273,7 +287,7 @@ app.post("/books/edit/:id", async (req, res) => {
   }
 });
 
-app.post("/books/delete", async (req, res) => {
+app.post("/books/delete", ensureAdmin, async (req, res) => {
   const { bookId } = req.body;
 
   try {
@@ -297,7 +311,7 @@ app.post("/borrow/book", async (req, res) => {
   }
 });
 
-app.post("/borrow/fromBorrowers", async (req, res) => {
+app.post("/borrow/fromBorrowers", ensureAdmin, async (req, res) => {
   const { bookId, borrowerEmail } = req.body;
 
   if (!bookId || !borrowerEmail) {
@@ -328,7 +342,7 @@ app.get("/users", async (req, res) => {
       .project({ password: 0 })
       .toArray();
 
-    res.json(users);
+  res.json(users);
   } catch (err) {
     console.error("GET /users error:", err);
     res.status(500).json({ error: "Server error" });
