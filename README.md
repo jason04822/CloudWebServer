@@ -16,26 +16,33 @@
 - *views (folder)*: Includes EJS template files such as home.ejs, borrowed.ejs, login.ejs, signup.ejs, create_book.ejs, create_author.ejs, create_borrower.ejs, details.ejs, and popup.ejs. These files render the user interface for the home page, borrowed records, login/signup forms, and CRUD operations.
 - *models (folder)*: contains "library.js", which is a backend module that defines and exports Mongoose schemas and models for managing a library system.he module includes two schemas: one for books and another for users
 
+## 2.1 Home Page 
+
+The Home Page provides an overview of all books and borrowers in the system. It displays each book’s title, ISBN, availability status, and—if borrowed—the email of the borrower. It also lists all borrowers along with their names, emails, and the books they have borrowed, including borrow dates. Users can borrow books directly from this page and manage records through edit and delete actions. Additionally, the page includes links to create new books, authors, and borrowers, each leading to a dedicated form for adding new entries.
+
+## 2.2 Borrowed Records sections
+
+This page shows a complete list of all borrowed books, including the book title, ISBN, borrower information, and the borrow date. The page is read-only; creation, editing, and deletion of borrow records are not performed here and must instead be done through the Home Page.
+
 ## 3. The Cloud-Based Server URL (for Testing)
 - *Note*: As this is a local development setup, no cloud deployment is currently active. For testing purposes, use the local server URL:
   - http://localhost:3000
-- *Future Deployment*: Once deployed to a cloud platform, the URL will be https://three81-group19.onrender.com.
+- *Future Deployment*: Once deployed to a cloud platform, the URL will be https://cloudwebsiteserver.onrender.com
 
 ## 4. Operation Guides
 
 ### Use of Login/Logout Pages
-- *Valid Login Information*:
+- *Admin Login Information*:
   - Email: 123@test.com, Password: 123
-  - Email: 1234@test.com, Password: 1234
-- *Sign-in Steps*:
-  1. Open a web browser and navigate to http://localhost:3000/login.
+- *User Sign-in Steps*:
+  1. Open a web browser and navigate to https://cloudwebsiteserver.onrender.com
   2. Enter a valid email and password in the login form.
   3. Click the "Login" button to access the home page.
-  4. To log out, click the "Logout" link on any page to return to the login page..
+  4. To log out, click the "Logout" link on any page to return to the login page.
 
 ### Use of Your CRUD Web Pages
 - *Home Page (/home)*:
-  - *Read*: Displays a table of books, authors, and borrowers. Click the "Details" link next to each item to view details.
+  - *Read*: Displays a table of books, borrowers. 
   - *Create*: Use the "Create Book", "Create Author", or "Create Borrower" links to access respective creation forms. Fill in the form fields and submit to add new records.
   - *Update*: Click "Edit" next to an item to view its details, modify fields, and submit the update form.
   - *Delete*: Click "Delete" next to an item to remove it after confirmation.
@@ -59,7 +66,7 @@
   - /users: For reading all users or creating a new user.
   - /users/:id: For updating or deleting a specific user (replace :id with the user's _id).
 - *How to Test Them*:
-  - *Prerequisites*: Ensure the server is running (npm start) at http://localhost:3000.
+  - *Prerequisites*: Ensure the server is running (npm start) at https://cloudwebsiteserver.onrender.com
   - *Tools*: Use Postman, cURL, or a similar HTTP client.
 - *cURL Testing Commands*:
 - (Read)curl http://localhost:3000/users
