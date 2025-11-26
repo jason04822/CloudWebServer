@@ -69,7 +69,7 @@ This page shows a complete list of all borrowed books, including the book title,
   - *Prerequisites*: Ensure the server is running (npm start) at https://cloudwebsiteserver.onrender.com
   - *Tools*: Use Postman, cURL, or a similar HTTP client.
 - *cURL Testing Commands*:
-- (Read)curl http://localhost:3000/users
--   (Create)curl -X POST http://localhost:3000/users -d "username=testuser" -d "email=test@example.com" -d "password=testpass"
-- (Updated)curl -X PUT http://localhost:3000/users/<user_id> -d"email=newemail@example.com" 
--(delete)curl -X DELETE http://localhost:3000/users/<user_id>
+- (Read)curl https://cloudwebsiteserver.onrender.com
+-   (Create)curl -X POST https://cloudwebsiteserver.onrender.com -d "username=testuser" -d "email=test@example.com" -d "password=testpass"
+- (Updated)curl -X PUT https://cloudwebsiteserver.onrender.com/<user_id> -d"email=newemail@example.com" 
+-(delete)curl -X DELETE https://cloudwebsiteserver.onrender.com/<user_id>
