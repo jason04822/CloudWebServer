@@ -12,17 +12,14 @@
 <main id="home" class="page active">
     <div class="container">
 
-        <!-- Welcome + Logout 同一行 -->
         <div class="top-bar">
             <h1>Welcome, <%= user.username %></h1>
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
 
-        <!-- BOOKS SECTION -->
         <div class="section glass">
             <h2 class="books-title">Books</h2>
 
-            <!-- 只有 admin 先見到 Add Book -->
             <% if (isAdmin) { %>
                 <div class="add-book-bar">
                     <form method="POST" action="/books/add" class="add-book-form">
@@ -65,7 +62,6 @@
 
                     <td>
                         <% if (book.available) { %>
-                            <!-- 所有人都可以喺 Books 度借自己 -->
                             <form method="POST" action="/borrow/book" style="display:inline;">
                                 <input type="hidden" name="bookId" value="<%= book._id %>">
                                 <input type="hidden" name="borrowerEmail" value="<%= user.email %>">
@@ -78,7 +74,6 @@
             </table>
         </div>
 
-        <!-- BORROWERS SECTION（只 admin 先見到） -->
         <% if (isAdmin) { %>
         <div class="section glass">
             <h2 class="borrowers-title">Borrowers</h2>
