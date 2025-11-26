@@ -43,13 +43,13 @@ This page shows a complete list of all borrowed books, including the book title,
 ### Use of Your CRUD Web Pages
 - *Home Page (/home)*:
   - *Read*: Displays a table of books, borrowers. 
-  - *Create*: Use the "Create Book", "Create Author", or "Create Borrower" links to access respective creation forms. Fill in the form fields and submit to add new records.
-  - *Update*: Click "Edit" next to an item to view its details, modify fields, and submit the update form.
-  - *Delete*: Click "Delete" next to an item to remove it after confirmation.
-- *Borrowed Records Page (/borrowed)*:
-  - *Read*: Displays a table of borrowed books with titles, ISBNs, and borrow dates.
-  - *Create*: Not applicable; borrowing is handled via the home page or API.
-  - *Update/Delete*: Not directly supported; manage via the home page or API.
+  - *Create*: Use the "Create Book" links to access respective creation forms. Fill in the form fields and submit to add new records.
+  - *Update*: Click "Edit" next to an item to view its details, modify the status of book.
+  - *Delete*: Not directly supported; manage via the home page or API.
+- *Borrower info section  (/borrowed)*: (Only Admin account can see this page)
+  - *Read*: Displays a table of borrower with borrow record and dates.
+  - *Create*: Admin can create borrow record for users
+  - *Update/Delete*: Click "Delete" to remove to the book record.
 
 ### Use of Your RESTful CRUD Services
 - *Lists of APIs*:
